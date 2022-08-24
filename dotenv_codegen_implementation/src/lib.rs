@@ -16,6 +16,7 @@ pub fn dotenv(input: TokenStream) -> TokenStream {
         result = dotenv::from_filename("environment/debug.env");
     } else {
         result = dotenv::from_filename("environment/prod.env");
+        result = dotenv::from_filename("data/prod.env");
     }
 
     if let Err(err) = dotenv::dotenv() {
