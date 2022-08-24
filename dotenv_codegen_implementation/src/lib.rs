@@ -11,8 +11,17 @@ use syn::Token;
 
 #[proc_macro_hack]
 pub fn dotenv(input: TokenStream) -> TokenStream {
+    let result;
+    if cfg!(debug_assertions) {
+        result = dotenv::from_filename("environment/debug.env");
+    } else {
+        result = dotenv::from_filename("environment/prod.env");
+    }
+
     if let Err(err) = dotenv::dotenv() {
-        panic!("Error loading .env file: {}", err);
+        if result.is_err() {
+            panic!("Error loading .env file: {}", err);
+        }
     }
 
     // Either everything was fine, or we didn't find an .env file (which we ignore)
